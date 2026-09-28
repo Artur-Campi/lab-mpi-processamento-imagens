@@ -1,0 +1,28 @@
+# Cluster MPI simulado: 1 master + 3 workers na mesma rede bridge
+x-no-mpi: &no-mpi
+  build: .
+  image: lab-mpi:latest
+  networks: [mpinet]
+  restart: unless-stopped
+
+services:
+  master:
+    <<: *no-mpi
+    container_name: master
+    hostname: master
+  worker1:
+    <<: *no-mpi
+    container_name: worker1
+    hostname: worker1
+  worker2:
+    <<: *no-mpi
+    container_name: worker2
+    hostname: worker2
+  worker3:
+    <<: *no-mpi
+    container_name: worker3
+    hostname: worker3
+
+networks:
+  mpinet:
+    driver: bridge
