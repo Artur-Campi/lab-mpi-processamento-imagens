@@ -30,6 +30,7 @@ dividindo a imagem em faixas horizontais entre os processos de um cluster Docker
 | `analisar_resultados.py` | tabela de tempos médios, speedup, eficiência e gráfico |
 | `resultados/` | logs das execuções, CSV de tempos e gráfico de speedup |
 | `prints/` | capturas de tela do terminal do Codespace |
+| `Relatorio_Lab_MPI_Artur_Campi_10436740.pdf` | relatório final da atividade |
 
 ## Como executar (Codespaces ou qualquer máquina com Docker)
 
