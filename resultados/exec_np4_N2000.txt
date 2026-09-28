@@ -1,0 +1,30 @@
+[Master] Inicializando analise com 4 processos MPI (2000 x 2000 pixels, cenario 'padrao')...
+
+========================================================================
+        RELATORIO CONSOLIDADO DE TRIAGEM DISTRIBUIDA (SIMULACAO)
+========================================================================
+--- Informacoes Gerais ---
+Dimensoes do Exame       : 2000 x 2000 pixels (4.000.000 px)
+Processos MPI Utilizados : 4  (hosts: master, worker1, worker2, worker3)
+Limiares Adotados        : suspeito > 200 | alto > 230 | faixa critica >= 5.0%
+Latencia Artificial      : 0.5 s x rank (ranks impares)
+Tempo Total de Execucao  : 1740.02 ms
+  geracao(root) 214.1 ms | bcast+barrier 15.7 ms | scatter 3.6 ms | analise(max) 4.4 ms | barreira->fim 1.3 ms
+--- Metricas Globais ---
+Intensidade Media Global : 87.74 (Maxima: 255)
+Total de Pixels Suspeitos: 80446 (2.01%)
+Altamente Suspeitos      : 28606 (0.72%)
+--- Lateralidade Pulmonar ---
+  - Pulmao Esquerdo      : 4447 suspeitos
+  - Pulmao Direito       : 75999 suspeitos
+Maior Concentracao       : Pulmao Direito (17.1x o outro lado)
+--- Auditoria por Processo (Faixas) ---
+P00@master  | Linhas [0000-0499] | Susp: 000000 ( 0.00%) | Max: 200 | Espera barreira:  1502.5 ms | Faixa: NORMAL
+P01@worker1 | Linhas [0500-0999] | Susp: 067218 ( 6.72%) | Max: 255 | Espera barreira:  1000.9 ms | Faixa: CRITICA
+P02@worker2 | Linhas [1000-1499] | Susp: 013227 ( 1.32%) | Max: 255 | Espera barreira:  1500.6 ms | Faixa: ATENCAO
+P03@worker3 | Linhas [1500-1999] | Susp: 000001 ( 0.00%) | Max: 203 | Espera barreira:     0.2 ms | Faixa: NORMAL
+------------------------------------------------------------------------
+CLASSIFICACAO GERAL DA RADIOGRAFIA: ATENCAO CLINICA
+(faixas criticas: 1/4 | faixas em atencao: 1/4)
+========================================================================
+

@@ -1,0 +1,34 @@
+[Master] Inicializando analise com 8 processos MPI (2000 x 2000 pixels, cenario 'padrao')...
+
+========================================================================
+        RELATORIO CONSOLIDADO DE TRIAGEM DISTRIBUIDA (SIMULACAO)
+========================================================================
+--- Informacoes Gerais ---
+Dimensoes do Exame       : 2000 x 2000 pixels (4.000.000 px)
+Processos MPI Utilizados : 8  (hosts: master, worker1, worker2, worker3)
+Limiares Adotados        : suspeito > 200 | alto > 230 | faixa critica >= 5.0%
+Latencia Artificial      : 0.5 s x rank (ranks impares)
+Tempo Total de Execucao  : 4114.96 ms
+  geracao(root) 523.9 ms | bcast+barrier 30.9 ms | scatter 17.6 ms | analise(max) 8.3 ms | barreira->fim 30.3 ms
+--- Metricas Globais ---
+Intensidade Media Global : 87.74 (Maxima: 255)
+Total de Pixels Suspeitos: 80446 (2.01%)
+Altamente Suspeitos      : 28606 (0.72%)
+--- Lateralidade Pulmonar ---
+  - Pulmao Esquerdo      : 4447 suspeitos
+  - Pulmao Direito       : 75999 suspeitos
+Maior Concentracao       : Pulmao Direito (17.1x o outro lado)
+--- Auditoria por Processo (Faixas) ---
+P00@master  | Linhas [0000-0249] | Susp: 000000 ( 0.00%) | Max: 199 | Espera barreira:  3510.8 ms | Faixa: NORMAL
+P01@master  | Linhas [0250-0499] | Susp: 000000 ( 0.00%) | Max: 200 | Espera barreira:  3021.0 ms | Faixa: NORMAL
+P02@worker1 | Linhas [0500-0749] | Susp: 006133 ( 1.23%) | Max: 255 | Espera barreira:  3513.5 ms | Faixa: ATENCAO
+P03@worker1 | Linhas [0750-0999] | Susp: 061085 (12.22%) | Max: 255 | Espera barreira:  2007.4 ms | Faixa: CRITICA
+P04@worker2 | Linhas [1000-1249] | Susp: 001874 ( 0.37%) | Max: 249 | Espera barreira:  3507.8 ms | Faixa: NORMAL
+P05@worker2 | Linhas [1250-1499] | Susp: 011353 ( 2.27%) | Max: 255 | Espera barreira:  1006.3 ms | Faixa: ATENCAO
+P06@worker3 | Linhas [1500-1749] | Susp: 000001 ( 0.00%) | Max: 203 | Espera barreira:  3506.7 ms | Faixa: NORMAL
+P07@worker3 | Linhas [1750-1999] | Susp: 000000 ( 0.00%) | Max: 200 | Espera barreira:     0.1 ms | Faixa: NORMAL
+------------------------------------------------------------------------
+CLASSIFICACAO GERAL DA RADIOGRAFIA: ATENCAO CLINICA
+(faixas criticas: 1/8 | faixas em atencao: 2/8)
+========================================================================
+

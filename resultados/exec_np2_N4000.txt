@@ -1,0 +1,28 @@
+[Master] Inicializando analise com 2 processos MPI (4000 x 4000 pixels, cenario 'padrao')...
+
+========================================================================
+        RELATORIO CONSOLIDADO DE TRIAGEM DISTRIBUIDA (SIMULACAO)
+========================================================================
+--- Informacoes Gerais ---
+Dimensoes do Exame       : 4000 x 4000 pixels (16.000.000 px)
+Processos MPI Utilizados : 2  (hosts: master, worker1)
+Limiares Adotados        : suspeito > 200 | alto > 230 | faixa critica >= 5.0%
+Latencia Artificial      : 0.5 s x rank (ranks impares)
+Tempo Total de Execucao  : 1263.44 ms
+  geracao(root) 717.3 ms | bcast+barrier 3.0 ms | scatter 7.8 ms | analise(max) 25.5 ms | barreira->fim 0.8 ms
+--- Metricas Globais ---
+Intensidade Media Global : 87.77 (Maxima: 255)
+Total de Pixels Suspeitos: 322228 (2.01%)
+Altamente Suspeitos      : 114526 (0.72%)
+--- Lateralidade Pulmonar ---
+  - Pulmao Esquerdo      : 17803 suspeitos
+  - Pulmao Direito       : 304425 suspeitos
+Maior Concentracao       : Pulmao Direito (17.1x o outro lado)
+--- Auditoria por Processo (Faixas) ---
+P00@master  | Linhas [0000-1999] | Susp: 269046 ( 3.36%) | Max: 255 | Espera barreira:   512.9 ms | Faixa: CRITICA
+P01@worker1 | Linhas [2000-3999] | Susp: 053182 ( 0.66%) | Max: 255 | Espera barreira:     0.1 ms | Faixa: NORMAL
+------------------------------------------------------------------------
+CLASSIFICACAO GERAL DA RADIOGRAFIA: ATENCAO CLINICA
+(faixas criticas: 1/2 | faixas em atencao: 0/2)
+========================================================================
+

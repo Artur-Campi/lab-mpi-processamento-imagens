@@ -1,0 +1,15 @@
+[Master] Inicializando analise com 4 processos MPI (2000 x 2000 pixels, cenario 'nenhuma')...
+Total de Pixels Suspeitos: 2 (0.00%)
+Altamente Suspeitos      : 0 (0.00%)
+Maior Concentracao       : Pulmao Equilibrado (1.0x o outro lado)
+CLASSIFICACAO GERAL DA RADIOGRAFIA: SEM INDICIOS RELEVANTES
+[Master] Inicializando analise com 4 processos MPI (2000 x 2000 pixels, cenario 'padrao')...
+Total de Pixels Suspeitos: 80446 (2.01%)
+Altamente Suspeitos      : 28606 (0.72%)
+Maior Concentracao       : Pulmao Direito (17.1x o outro lado)
+CLASSIFICACAO GERAL DA RADIOGRAFIA: ATENCAO CLINICA
+[Master] Inicializando analise com 4 processos MPI (2000 x 2000 pixels, cenario 'extensa')...
+Total de Pixels Suspeitos: 329019 (8.23%)
+Altamente Suspeitos      : 147086 (3.68%)
+Maior Concentracao       : Pulmao Direito (1.7x o outro lado)
+CLASSIFICACAO GERAL DA RADIOGRAFIA: QUADRO CRITICO / ALTA CONCENTRACAO DE ALTERACOES

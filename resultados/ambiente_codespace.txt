@@ -1,0 +1,12 @@
+Linux codespaces-057a7f 6.8.0-1064-azure #72~22.04.1-Ubuntu SMP Wed Jul 22 23:39:45 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+PRETTY_NAME="Ubuntu 24.04.5 LTS"
+NAME="Ubuntu"
+CPU(s):                                  4
+Model name:                              AMD EPYC 7763 64-Core Processor
+Thread(s) per core:                      2
+Core(s) per socket:                      2
+               total        used        free      shared  buff/cache   available
+Mem:            15Gi       2.2Gi       1.4Gi        63Mi        12Gi        13Gi
+Swap:             0B          0B          0B
+Docker version 29.8.0-1, build 88096ef00576baf72a9cb45caa45c0544c40e0a7
+Docker Compose version v5.5.1
