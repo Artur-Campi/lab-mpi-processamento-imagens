@@ -61,6 +61,8 @@ def ler_argumentos():
                    help="quantidade de focos de consolidacao injetados na radiografia")
     p.add_argument("--seed", type=int, default=2026, help="semente do gerador (mesma imagem em todos os testes)")
     p.add_argument("--csv", default=None, help="arquivo CSV onde o root acrescenta os tempos medidos")
+    p.add_argument("--analise", choices=["vetorizada", "laco"], default="vetorizada",
+                   help="vetorizada: mascaras NumPy (padrao) | laco: percorre pixel a pixel em Python puro (carga de CPU alta)")
     p.add_argument("--quiet", action="store_true", help="nao imprime a auditoria por processo")
     return p.parse_args()
 
@@ -189,6 +191,7 @@ def main():
             "pct_atencao": PCT_ATENCAO,
             "pct_alto_critico": PCT_ALTO_CRITICO,
             "atraso": args.atraso,
+            "analise": args.analise,
         }
     t_geracao = MPI.Wtime()
 
@@ -216,15 +219,34 @@ def main():
     # Etapa 6 - Analise local (vetorizada com NumPy, pixel a pixel)
     # -----------------------------------------------------------------------
     total_local = int(bloco_local.size)
-    soma_local = int(bloco_local.sum(dtype=np.uint64))
-    max_local = int(bloco_local.max()) if total_local else 0
-
     col_meio = parametros["colunas"] // 2                    # floor(N/2)
-    suspeito_mask = bloco_local > parametros["limiar_suspeito"]
-    suspeitos_esq = int(np.count_nonzero(suspeito_mask[:, :col_meio]))   # coluna <  N/2
-    suspeitos_dir = int(np.count_nonzero(suspeito_mask[:, col_meio:]))   # coluna >= N/2
+    lim_s, lim_a = parametros["limiar_suspeito"], parametros["limiar_alto"]
+
+    if parametros["analise"] == "laco":
+        # Inspecao literal pixel a pixel em Python puro (sem vetorizacao):
+        # custo de CPU proporcional ao numero de pixels -> evidencia o ganho do paralelismo.
+        soma_local = max_local = suspeitos_esq = suspeitos_dir = altos_local = 0
+        for linha in bloco_local.tolist():
+            for j, v in enumerate(linha):
+                soma_local += v
+                if v > max_local:
+                    max_local = v
+                if v > lim_s:                                # pixel suspeito
+                    if j < col_meio:
+                        suspeitos_esq += 1                   # coluna <  N/2 -> pulmao esquerdo
+                    else:
+                        suspeitos_dir += 1                   # coluna >= N/2 -> pulmao direito
+                    if v > lim_a:                            # altamente suspeito (lim_a > lim_s)
+                        altos_local += 1
+    else:
+        # Mesma inspecao pixel a pixel, porem vetorizada pelo NumPy (laco em C)
+        soma_local = int(bloco_local.sum(dtype=np.uint64))
+        max_local = int(bloco_local.max()) if total_local else 0
+        suspeito_mask = bloco_local > lim_s
+        suspeitos_esq = int(np.count_nonzero(suspeito_mask[:, :col_meio]))   # coluna <  N/2
+        suspeitos_dir = int(np.count_nonzero(suspeito_mask[:, col_meio:]))   # coluna >= N/2
+        altos_local = int(np.count_nonzero(bloco_local > lim_a))
     suspeitos_local = suspeitos_esq + suspeitos_dir
-    altos_local = int(np.count_nonzero(bloco_local > parametros["limiar_alto"]))
 
     # Etapa 7 - Classificacao heuristica da faixa
     pct_suspeitos = 100.0 * suspeitos_local / total_local if total_local else 0.0
@@ -318,7 +340,7 @@ def main():
         print(f"Processos MPI Utilizados : {size}  (hosts: {', '.join(sorted({r['host'] for r in todos_relatorios}))})")
         print(f"Limiares Adotados        : suspeito > {parametros['limiar_suspeito']} | "
               f"alto > {parametros['limiar_alto']} | faixa critica >= {parametros['pct_critico']:.1f}%")
-        print(f"Latencia Artificial      : {parametros['atraso']} s x rank (ranks impares)")
+        print(f"Latencia Artificial      : {parametros['atraso']} s x rank (ranks impares) | analise: {parametros['analise']}")
         print(f"Tempo Total de Execucao  : {t_total:.2f} ms")
         print(f"  geracao(root) {(t_geracao - t_inicio) * 1000:.1f} ms | bcast+barrier {(t_config - t_geracao) * 1000:.1f} ms | "
               f"scatter {(t_scatter - t_config) * 1000:.1f} ms | analise(max) {t_max_analise:.1f} ms | "
@@ -347,9 +369,9 @@ def main():
             novo = not os.path.exists(args.csv)
             with open(args.csv, "a", encoding="utf-8") as f:
                 if novo:
-                    f.write("linhas,colunas,processos,atraso,t_total_ms,t_paralelo_ms,t_geracao_ms,"
+                    f.write("analise,linhas,colunas,processos,atraso,t_total_ms,t_paralelo_ms,t_geracao_ms,"
                             "t_scatter_ms,t_analise_max_ms,suspeitos,esq,dir,diagnostico\n")
-                f.write(f"{L},{C},{size},{parametros['atraso']},{t_total:.2f},{t_paralelo:.2f},"
+                f.write(f"{parametros['analise']},{L},{C},{size},{parametros['atraso']},{t_total:.2f},{t_paralelo:.2f},"
                         f"{(t_geracao - t_inicio) * 1000:.2f},{(t_scatter - t_config) * 1000:.2f},"
                         f"{t_max_analise:.2f},{suspeitos_global},{esq_global},{dir_global},{diagnostico}\n")
 

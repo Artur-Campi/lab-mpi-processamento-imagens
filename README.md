@@ -26,7 +26,7 @@ dividindo a imagem em faixas horizontais entre os processos de um cluster Docker
 | `processamento_imagens.py` | programa MPI (12 etapas do roteiro) |
 | `Dockerfile` / `docker-compose.yml` / `hosts` | cluster de 4 containers com Open MPI + SSH sem senha |
 | `preparar_cluster.sh` | sobe o cluster, inicia o SSH e copia o script para os nós |
-| `executar_experimentos.sh` | bateria de medições (N = 500, 2000, 4000, 6000; 1, 2, 4, 8 processos) |
+| `executar_experimentos.sh` | bateria de medições (N = 500 a 6000; 1, 2, 4, 8 processos; análise vetorizada e laço Python) |
 | `analisar_resultados.py` | tabela de tempos médios, speedup, eficiência e gráfico |
 | `resultados/` | logs das execuções, CSV de tempos e gráfico de speedup |
 | `prints/` | capturas de tela do terminal do Codespace |
@@ -53,7 +53,13 @@ python3 analisar_resultados.py
 ```
 
 Opções do programa: `N` (imagem N x N), `--linhas`, `--colunas`, `--atraso` (fator da latência artificial,
-padrão 0.5 s x rank nos ranks ímpares; 0 desliga), `--cenario {nenhuma,padrao,extensa}`, `--seed`, `--csv`, `--quiet`.
+padrão 0.5 s x rank nos ranks ímpares; 0 desliga), `--cenario {nenhuma,padrao,extensa}`, `--analise {vetorizada,laco}`, `--seed`, `--csv`, `--quiet`.
+
+## Observação sobre o Codespaces
+
+No Codespaces, o `iptables-legacy` do host vem com `FORWARD DROP` e só libera a `docker0`; sem ajuste, o `ssh`/`mpirun`
+entre os containers da rede `mpinet` trava. O `preparar_cluster.sh` já aplica a correção
+(`sudo iptables-legacy -I DOCKER-USER -j ACCEPT`).
 
 ## Divisibilidade de linhas
 
